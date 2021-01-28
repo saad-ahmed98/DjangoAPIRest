@@ -15,7 +15,7 @@ from .filters import ParticipantFilter,ActivityFilter,EventFilter
 
 class ParticipantView(generics.GenericAPIView,mixins.ListModelMixin, mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin):
-    '''vue generique manipulant une liste de participants [POST, GET]'''
+    '''Vue manipulant une liste de participants [POST, GET]'''
 
     serializer_class = ParticipantSerializer
     queryset = Participant.objects.all()
@@ -34,7 +34,7 @@ class ParticipantView(generics.GenericAPIView,mixins.ListModelMixin, mixins.Crea
         return self.create(request)
 
 class ParticipantDetailsView(ParticipantView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
-    '''vue generique manipulant un participant specifique [POST, GET, DELETE, PATCH, PUT]'''
+    '''Vue manipulant un participant specifique [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):
         return self.update(request, id)
@@ -47,7 +47,7 @@ class ParticipantDetailsView(ParticipantView,mixins.UpdateModelMixin,mixins.Dest
 
 class ActivityView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin):
-    '''vue generique manipulant une liste d'activité [POST, GET]'''
+    '''Vue manipulant une liste d'activité [POST, GET]'''
 
     serializer_class = ActivitySerializer
     queryset = Activity.objects.all()
@@ -67,7 +67,7 @@ class ActivityView(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
         return self.create(request)
 
 class ActivityDetailsView(ActivityView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
-    '''vue generique manipulant une activité specifique [POST, GET, DELETE, PATCH, PUT]'''
+    '''Vue manipulant une activité specifique [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):
         return self.update(request, id)
@@ -80,7 +80,7 @@ class ActivityDetailsView(ActivityView,mixins.UpdateModelMixin,mixins.DestroyMod
 
 class EventView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
                     mixins.RetrieveModelMixin):
-    '''vue generique manipulant une liste d'evennement [POST, GET]'''
+    '''Vue manipulant une liste d'evennement [POST, GET]'''
 
     serializer_class = EventSerializer
     queryset = Event.objects.all()
@@ -99,7 +99,7 @@ class EventView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
         return self.create(request)
 
 class EventDetailsView(EventView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
-    '''vue generique manipulant evennement [POST, GET, DELETE, PATCH, PUT]'''
+    '''Vue manipulant evennement [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):
         return self.update(request, id)
@@ -113,13 +113,14 @@ class EventDetailsView(EventView,mixins.UpdateModelMixin,mixins.DestroyModelMixi
 
 @api_view(['POST'])
 def generate_events(request,id):
-    """méthode correspondant à la vue specifique generant les evennements sur une periode donnée,
-    la période est donnée par une query:
+    """Vue generant les evennements sur une periode donnée.
+    La période est donnée par une query:
     start_date : date de début,
     end_date : date de fin,
     weekdays : liste de booleans, chaque boolean étant un jour de la semaine
-    pour l'appeler, utiliser une requete POST en JSON
-    ex : {
+    Pour l'appeler, utiliser une requete POST en JSON.
+    exemple :
+    {
         "start_date": "2010-01-20T00:00:00+01:00",
         "end_date": "2010-01-22T00:00:00+01:00",
         "weekdays": [true,true,true,true,true,true,true]
@@ -142,13 +143,15 @@ def generate_events(request,id):
 @api_view(['GET', 'POST', 'PATCH'])
 def update_participants(request,id):
     """
-    méthode specifique correspondant à la generation de participants
+    Vue correspondant à la generation de participants
     à un evennement et à leur manipulation.
-    Pour POST et PATCH, on supposera que le corps des requetes sont des json correspondant à :
-    POST aura pk du participant que l'on rajoutera à l'evennement
-    PATCH aura pk du participant et was_there d'attendance à modifier
-    pour indiquer s'il a participé ou pas
-    ex : pour PATCH {"pk":1,"was_there":true} ou pour POST {"pk":1}
+    Pour POST et PATCH, le corps des requetes doivent être des JSON :
+    POST aura "pk" du participant que l'on rajoutera à l'evennement
+    PATCH aura "pk" du participant et "was_there" d'attendance à modifier
+    pour indiquer s'il a participé ou pas.
+    exemples :
+    pour POST {"pk":1}
+    pour PATCH {"pk":1,"was_there":true}
     """
     if request.method == 'POST':
         serializer = UpdatePostParticipantsSerializer(data=request.data)
