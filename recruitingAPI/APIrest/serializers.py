@@ -27,3 +27,14 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ['id', 'name','description', 'events']
+
+class GenerateEventsSerializer(serializers.Serializer):
+    start_date = serializers.DateTimeField()
+    end_date = serializers.DateTimeField()
+    weekdays = serializers.ListField(child=serializers.BooleanField())
+
+class UpdatePostParticipantsSerializer(serializers.Serializer):
+    pk = serializers.IntegerField()
+
+class UpdatePatchParticipantsSerializer(UpdatePostParticipantsSerializer):
+    was_there = serializers.BooleanField()
