@@ -1,3 +1,4 @@
+'''vues de l'api traitant les requetes de chaque endpoint'''
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError
 from rest_framework import generics
@@ -6,12 +7,14 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from .models import Participant,Event,Activity,Attendance
-from .serializers import *
+from .serializers import (
+    ParticipantSerializer,ActivitySerializer,EventSerializer,AttendanceSerializer,
+    GenerateEventsSerializer,UpdatePostParticipantsSerializer,UpdatePatchParticipantsSerializer
+)
 from .filters import ParticipantFilter,ActivityFilter,EventFilter
 
 class ParticipantView(generics.GenericAPIView,mixins.ListModelMixin, mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
-                     mixins.DestroyModelMixin):
+                    mixins.RetrieveModelMixin):
     '''vue generique manipulant une liste de participants [POST, GET]'''
 
     serializer_class = ParticipantSerializer
@@ -30,7 +33,7 @@ class ParticipantView(generics.GenericAPIView,mixins.ListModelMixin, mixins.Crea
     def post(self, request):
         return self.create(request)
 
-class ParticipantDetailsView(ParticipantView):
+class ParticipantDetailsView(ParticipantView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     '''vue generique manipulant un participant specifique [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):
@@ -43,8 +46,7 @@ class ParticipantDetailsView(ParticipantView):
         return self.destroy(request, id)
 
 class ActivityView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
-                     mixins.DestroyModelMixin):
+                    mixins.RetrieveModelMixin):
     '''vue generique manipulant une liste d'activité [POST, GET]'''
 
     serializer_class = ActivitySerializer
@@ -64,7 +66,7 @@ class ActivityView(generics.GenericAPIView, mixins.ListModelMixin, mixins.Create
     def post(self, request):
         return self.create(request)
 
-class ActivityDetailsView(ActivityView):
+class ActivityDetailsView(ActivityView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     '''vue generique manipulant une activité specifique [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):
@@ -77,8 +79,7 @@ class ActivityDetailsView(ActivityView):
         return self.destroy(request, id)
 
 class EventView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
-                     mixins.DestroyModelMixin):
+                    mixins.RetrieveModelMixin):
     '''vue generique manipulant une liste d'evennement [POST, GET]'''
 
     serializer_class = EventSerializer
@@ -97,8 +98,7 @@ class EventView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateMod
     def post(self, request):
         return self.create(request)
 
-class EventDetailsView(EventView):
-
+class EventDetailsView(EventView,mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     '''vue generique manipulant evennement [POST, GET, DELETE, PATCH, PUT]'''
 
     def put(self, request, id=None):

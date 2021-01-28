@@ -1,5 +1,6 @@
+'''interface administrateur de l'api'''
 from django.contrib import admin
-from APIrest.models import Attendance,Participant,Event,Activity
+from .models import Attendance,Participant,Event,Activity
 
 admin.site.register(Attendance)
 admin.site.register(Participant)
